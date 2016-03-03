@@ -29,7 +29,7 @@ def M_het_code_changer(old_list, new_list, fgeno, mgeno):
 			new_list.append('a')
 		elif x == mgeno:
 			new_list.append('ab')
-		else:
+		elif x != mgeno and x != fgeno:
 			new_list.append('-')
 		
 def F_het_code_changer(old_list, new_list, fgeno, mgeno):
@@ -38,7 +38,7 @@ def F_het_code_changer(old_list, new_list, fgeno, mgeno):
 			new_list.append('a')
 		elif x == fgeno:
 			new_list.append('ab')
-		else:
+		elif x != mgeno and x != fgeno:
 			new_list.append('-')
 
 # This function takes the het-het inputs and codes it as OneMap based on the given het-het genotype alleles
@@ -54,7 +54,7 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 					new_list.append('b')	
 				elif x == hetero:
 					new_list.append('ab')
-				else:
+				elif x != 'A' and x != 'C' and x != hetero:
 					new_list.append('-')
 		elif hetero == 'R':
 			for x in old_list:
@@ -64,7 +64,7 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 					new_list.append('b')	
 				elif x == hetero:
 					new_list.append('ab')
-				else:
+				elif x != 'A' and x != 'G' and x != hetero:
 					new_list.append('-')
 		elif hetero == 'W':
 			for x in old_list:
@@ -74,7 +74,7 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 					new_list.append('b')	
 				elif x == hetero:
 					new_list.append('ab')
-				else:
+				elif x != 'A' and x != 'T' and x != hetero:
 					new_list.append('-')								
 		elif hetero == 'S':
 			for x in old_list:
@@ -84,7 +84,7 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 					new_list.append('b')	
 				elif x == hetero:
 					new_list.append('ab')
-				else:
+				elif x != 'G' and x != 'C' and x != hetero:
 					new_list.append('-')
 		elif hetero == 'Y':
 			for x in old_list:
@@ -94,7 +94,7 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 					new_list.append('b')	
 				elif x == hetero:
 					new_list.append('ab')
-				else:
+				elif x != 'T' and x != 'C' and x != hetero:
 					new_list.append('-')
 		elif hetero == 'K':
 			for x in old_list:
@@ -104,7 +104,7 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 					new_list.append('b')	
 				elif x == hetero:
 					new_list.append('ab')
-				else:
+				elif x != 'G' and x != 'T' and x != hetero:
 					new_list.append('-')					
 					
 										
@@ -113,10 +113,6 @@ def het_het_code_changer(old_list, new_list, fgeno, mgeno):
 		print(fgeno, mgeno, old_list)
 		
 
-
-
-
-#####################
 
 OneMapList = []
 HetHetList=[]
@@ -138,11 +134,14 @@ def geno_convert(genolist):
 		F_het_code_changer(genolist[3:], genos, genolist[1], genolist[2])
 		OneMapList.append([name,'D1.10' ,genos])
 	
-	else:
+	elif (genolist[1] == 'M' or genolist[1] == 'R' or genolist[1] == 'W' or genolist[1] == 'S' or genolist[1] == 'Y' or genolist[1] == 'K') and (genolist[2] == 'M' or genolist[2] == 'R' or genolist[2] == 'W' or genolist[2] == 'S' or genolist[2] == 'Y' or genolist[2] == 'K'):
 		name = genolist[0]
 		genos = []
 		het_het_code_changer(genolist[3:], genos, genolist[1], genolist[2])
 		HetHetList.append([name, 'B3.7', genos])
+	
+	else:
+		pass
 		
 		
 for SNP in geno_list:
@@ -165,7 +164,7 @@ for SNP in OneMapList:
 
 Marker_No = len(OneMap_Out)
 Progeny_No = len(OneMapList[0][2])		
-header = str(Marker_No) + ' ' + str(Progeny_No) + '\n'		
+header = str(Progeny_No) + ' ' + str(Marker_No) + '\n'		
 output = '\n'.join([str(x) for x in OneMap_Out])
 
 file = open(filenameOut,'w')
@@ -177,7 +176,7 @@ file.close()
 #Below creates the file with the het-het SNPs in a separate file
 HetHet_Out =[]
 Het_Marker_No = len(HetHetList)
-header = str(Het_Marker_No) + ' ' + str(Progeny_No) + '\n'
+header = str(Progeny_No) + ' ' + str(Het_Marker_No) + '\n'
 
 HetHetList
 
