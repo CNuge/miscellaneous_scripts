@@ -17,32 +17,34 @@ python3 fastq_batch_searcher.py  folder_name -r ATGCAT
 
 where ATGCAT is the sequence you're searching for and folder_name is the folder contianing the fastq files
 """
-
+import os
 import argparse
 import itertools
 parser = argparse.ArgumentParser()
-parser.add_argument("input", help="input folder containing Fastq files ")
+parser.add_argument("input", type = str, help="input folder containing Fastq files ")
 parser.add_argument("-r", "--restriction_enzyme", type=str, help="The restriction enzyme sequence you're searching for")
 args = parser.parse_args()
 
 #open the directory
-dir_name= input
+dir_name= args.input
 here_we_are = os.getcwd()
 new_dir = here_we_are + '/' + dir_name
 os.chdir(new_dir)
 
 
-header = 'File\tNumber of reads\tNumber of times restriction sequence was seen\tNumber of reads with restriction enzyme sequence'
+header = 'File\tNumber of reads\tNumber of times restriction sequence was seen\tNumber of reads with restriction enzyme sequence\n'
 filex = open('Summary_file.txt','w')
 filex.write(header)
 filex.close()
 
+files = os.listdir(new_dir)
+fastq_files = [i for i in files if i.endswith('.fastq')]
 
-for file in new_dir:
-	update = 	"counting records from file" + file
+for file in fastq_files:
+	update =  "counting records from file " + file
 	print(update)
 	with open(file) as input:
-    	num_lines = sum([1 for line in input])
+		num_lines = sum([1 for line in input])
 
 	total_records = int(num_lines / 4)
 
@@ -50,20 +52,17 @@ for file in new_dir:
 	num_of_lines = 0
 
 	with open(file) as f:
-    	seq_lines = itertools.islice(f, 1, None, 4)
-    	print('searching for: ' + args.restriction_enzyme +'in ' + file)
-    	for line in seq_lines:
-    		if args.restriction_enzyme in line:
-    			num_of_times = line.count(args.restriction_enzyme)
-    			restriction_count_number += num_of_times
-				num_of_lines = +=1
+		seq_lines = itertools.islice(f, 1, None, 4)
+		print('searching for: ' + args.restriction_enzyme +' in ' + file)
+		for line in seq_lines:
+			if args.restriction_enzyme in line:
+				num_of_times = line.count(args.restriction_enzyme)
+				restriction_count_number += num_of_times
+				num_of_lines += 1
 
-	outstring1="\s\t\d\t\d\t\d\n" % (file, total_records, restriction_count_number, num_of_lines)
+	outstring1="%s\t%d\t%d\t%d\n" % (file, total_records, restriction_count_number, num_of_lines)
 	with open('Summary_file.txt', "a") as outfile:
-    	outfile.write(outstring1)
-	outstring2 = "The restriction enzyme sequence %s was found in %s" % ( args.restriction_enzyme, file)
-	print(outstring2)
-
+		outfile.write(outstring1)
 
 
 os.chdir('..')
