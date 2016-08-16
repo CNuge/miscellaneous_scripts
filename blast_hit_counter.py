@@ -4,7 +4,7 @@
 
 # into command line type the following:
 #
-# python3 Blastfilter_outfmt7.py Blast_output_file  -q Blast_query_file
+# python3 Blast_hit_counter.py Blast_output_file  -q Blast_query_file
 #
 #below is the argument parser that will take the command line options and pass them into the code
 import argparse 
@@ -17,17 +17,23 @@ from pandas import Series, DataFrame
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input", help="input the Blast outfmt 7 file")
-parser.add_argument("-q", "--query_list", type=int, help="A fasta file with all of the sequences that you queried to produce the given blast output file")
+parser.add_argument("-q", "--query_list", type=str, help="A fasta file with all of the sequences that you queried to produce the given blast output file")
 args = parser.parse_args()
 
 
 query_sequences = args.query_list
 Blast_filename = args.input
+##########################################################################################
+
+Blast_filename = 'Contigs_47kmer_vs_AC_SNP_hit.out'
+query_sequences = 'GBS_SNP_hit_seq.fasta'
+##########################################################################################
+
 making_XL = len(Blast_filename) - 4
 output = 'Hit_count_' + Blast_filename[:making_XL] +'.xlsx'
 
-##########################################################################################
 
+##########################################################################################
 
 Blast_hits = []
 with open(Blast_filename) as file:
@@ -45,7 +51,8 @@ query_list = []
 with open(query_sequences) as file:
 	for line in file:
 		if line[0] == '>':
-			name = line[1:]
+			new_line = line.rstrip()
+			name = new_line[1:]
 			query_list.append(name)
 		else:
 			continue
