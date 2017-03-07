@@ -1,5 +1,6 @@
 
-#figure out how to get these programs to run with just the name, i.e. Hit_retainer.py instead of python3 Hit_re.....
+
+
 import argparse 
 
 parser = argparse.ArgumentParser()
@@ -16,6 +17,10 @@ Retained_hits_output = 'Retained_hits_' + args.input
 filter_parameter = args.filter_parameter_1
 if filter_parameter == 11:
 	G_OR_L = '<' 
+elif filter_parameter == 5:
+	G_OR_L = '<' 
+elif filter_parameter == 6:
+	G_OR_L = '<' 
 else:
 	G_OR_L = '>'
 
@@ -24,16 +29,15 @@ def hit_retain(hit, parameter, cutoff, greater_or_less):
 	try:
 		value = float(hit[column])
 	except:
-		print('The following line was kicked out because it has letters in the columns where numbers are required. Math impossible!')
-		print(line)
-	float_cutoff = float(cutoff)
+		print(hit)	
+	float_cut = float(cutoff)
 	if greater_or_less == '>':	
-		if value >= float_cutoff:
+		if value >= float_cut:
 			return['keep']
 		else:
 			return['omit']
 	elif greater_or_less == '<':
-		if value <= float_cutoff:
+		if value <= float_cut:
 			return['keep']
 		else:
 			return['omit']
@@ -50,13 +54,17 @@ with open(args.input) as file:
 			if ruling == ['keep']:
 				Blast_hits.append(dat)
 			else:
-				pass
+				continue
 #below repeat the filtering if a second paramater is given at input
 Blast_filtered_twice = []
 if args.filter_parameter_2 == 0:
 	pass
 else:
 	if args.filter_parameter_2 == 11:
+		G_OR_L_2 = '<' 
+	elif args.filter_parameter_2 == 5:
+		G_OR_L_2 = '<' 
+	elif args.filter_parameter_2 == 6:
 		G_OR_L_2 = '<' 
 	else:
 		G_OR_L_2 = '>'
@@ -65,7 +73,7 @@ else:
 		if ruling == ['keep']:
 			Blast_filtered_twice.append(line)
 		else:
-			pass
+			continue
 
 
 if args.filter_parameter_2 == 0:
@@ -81,9 +89,7 @@ for x in Retained_hits:
 	Retained_hits_outstring += z
 	
 
-header = 'query id\tsubject id\t% identity\talignment length\tmismatches\tgap opens\tq. start\tq. end\ts. start\ts. end\tevalue\tbit score\n'
 
 file=open(Retained_hits_output,'w')
-file.write(header)
 file.write(Retained_hits_outstring)
 file.close()
