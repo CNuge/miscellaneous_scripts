@@ -21,6 +21,8 @@ elif filter_parameter == 5:
 	G_OR_L = '<' 
 elif filter_parameter == 6:
 	G_OR_L = '<' 
+elif filter_parameter == 9:
+	G_OR_L = '<' 
 else:
 	G_OR_L = '>'
 
