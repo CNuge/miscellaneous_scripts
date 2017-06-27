@@ -44,6 +44,12 @@ def find_gaps(dictonary_of_snps, contig_dat):
 		""" check the beginning position relative to 0, and the last position
 			relative to the length of the contig. then step through all the
 			intermediate locations """
+		try:
+			position_list[0]
+		except:
+			print('missing:')
+			print(contig)
+			continue
 		if position_list[0] > 50000:
 			""" add front gaps to the list"""
 			gaps_list.append((contig, 0, position_list[0]))
@@ -55,7 +61,7 @@ def find_gaps(dictonary_of_snps, contig_dat):
 		pos_2 = 1
 		while pos_2 < len(position_list):
 			if (position_list[pos_1] + 50000) > position_list[pos_2]:
-				continue
+				pass
 			else:
 				""" there is a 50000 or more bp gap here """
 				gaps_list.append((contig, position_list[pos_1], position_list[pos_2]))
@@ -89,6 +95,11 @@ if __name__ == '__main__':
 
 	#get the contigs that have no SNPs on them
 	unreped_contigs = contig_dat[~contig_dat['Contig'].isin(snp_df['Contig'])]
+	#others that only has a '-' snp
+	additional_missing = ['Contig6224','Contig4388','Contig9123','Contig17467','Contig6267','Contig8925','Contig10049','Contig4275','Contig7477','Contig2467','Contig6076','Contig13321','Contig6043']
+	additional_missing_df = contig_dat[contig_dat['Contig'].isin(additional_missing)]
+	#merge the dataframes
+	unreped_contigs = unreped_contigs.append(additional_missing_df)
 
 	#print non represented contigs to a file
 	unreped_contigs.to_csv('contigs_with_no_snps.tsv', sep='\t', index=False)
@@ -100,5 +111,18 @@ if __name__ == '__main__':
 	#build the dictonary of snp locations
 	contig_hit_dict = snp_pos_dictonary(reped_contigs, snp_df)
 
+	#locate the gaps in the contigs
+	#there are 10,432 regions.
 	gaps_in_contigs = find_gaps(contig_hit_dict, reped_contigs)
+
+	gaps_dataframe = DataFrame(gaps_in_contigs, columns = ['Contig', 'leading_position', 'trailing_position'])
+	#get size data for the contigs
+	gaps_dataframe = gaps_dataframe.merge(contig_dat)
+	#reorder columns
+	gaps_dataframe = gaps_dataframe[['Contig', 'Size', 'Size_rank', 'leading_position', 'trailing_position']]
+	gaps_dataframe.sort_values(['Size_rank','leading_position'], inplace=True)
+	gaps_dataframe.to_csv('locations_of_gaps_in_coverage.tsv', sep='\t', index=False)
+
+
+
 
