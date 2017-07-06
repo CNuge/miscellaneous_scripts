@@ -2,6 +2,11 @@ import os
 import pandas as pd
 from pandas import DataFrame
 
+""" this program will read through a series of contigs and a .vcf file
+	of a set of marker's positions on those contigs, and return a list
+	of 50,000 bp gaps with no markers identified """
+
+
 def read_vcf_locations(vcf_name):
 	""" read in the .vcf, get the contig and position columns
 		and return a list of tuples"""
