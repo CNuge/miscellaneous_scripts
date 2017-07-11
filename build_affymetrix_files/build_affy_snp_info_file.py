@@ -66,8 +66,10 @@ snp_data = read_vcf('fraser_strain_snps_one_location.vcf')
 snp_data['seventyone_mer'] = snp_data.apply(
 		lambda x: get_71mer(contig_dict[x['#CHROM']], x['Pos'], [x['REF'],x['ALT']]))
 
-"""next reorder and rename the columns to the affymetrix specs, then output the data"""
+""" add an argparse for the 1. snp_priority level 2. strain of origin
+	add this information to the dataframe """
 
+"""next reorder and rename the columns to the affymetrix specs, then output the data"""
 
 
 
