@@ -60,65 +60,65 @@ def name_split(name):
 if __name__ == '__main__':
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("input_vcf", help="input the .vcf file")
-parser.add_argument("-c", "--contigs", type=str, help="input the genome in .fasta fmt")
-parser.add_argument("-p", "--priority_level", type=str, help="state the priority level of this snp batch")
-parser.add_argument("-s", "--strain", type=str, help="state the strain of origin of this snp batch")
-parser.add_argument("-o", "--organism", type=str, help="state the name of the species")
-args = parser.parse_args()
+	parser = argparse.ArgumentParser()
+	parser.add_argument("input_vcf", help="input the .vcf file")
+	parser.add_argument("-c", "--contigs", type=str, help="input the genome in .fasta fmt")
+	parser.add_argument("-p", "--priority_level", type=str, help="state the priority level of this snp batch")
+	parser.add_argument("-s", "--strain", type=str, help="state the strain of origin of this snp batch")
+	parser.add_argument("-o", "--organism", type=str, help="state the name of the species")
+	args = parser.parse_args()
 
 
 
-""" read in the genome fasta  """
-contig_dict = load_contigs(args.contigs) 
-#'/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa'
+	""" read in the genome fasta  """
+	contig_dict = load_contigs(args.contigs) 
+	#'/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa'
 
-""" read the .vcf in as a dataframe, then project get_71mer through a lambda """
-snp_data = read_vcf(args.input_vcf) 
-#'fraser_strain_snps_one_location.vcf'
+	""" read the .vcf in as a dataframe, then project get_71mer through a lambda """
+	snp_data = read_vcf(args.input_vcf) 
+	#'fraser_strain_snps_one_location.vcf'
 
-""" change the name of the snps, store in affy column name"""
-snp_data['snpid'] = snp_data.apply(
-		lambda x: name_split(x['ID']), axis=1)
+	""" change the name of the snps, store in affy column name"""
+	snp_data['snpid'] = snp_data.apply(
+			lambda x: name_split(x['ID']), axis=1)
 
-""" add this information to the dataframe:
-	1. snp_priority level 
-	2. strain of origin 
-	3. organism name
-	4. make Pos an integer for use in 71mer """
+	""" add this information to the dataframe:
+		1. snp_priority level 
+		2. strain of origin 
+		3. organism name
+		4. make Pos an integer for use in 71mer """
 
-snp_data['SNP_PRIORITY'] = args.priority_level
+	snp_data['SNP_PRIORITY'] = args.priority_level
 
-snp_data['REF_STR'] = args.strain
+	snp_data['REF_STR'] = args.strain
 
-snp_data['Organism'] = args.organism
+	snp_data['Organism'] = args.organism
 
-snp_data['Pos'] = snp_data['POS'].astype(int)
+	snp_data['Pos'] = snp_data['POS'].astype(int)
 
-""" apply the 71mer build to the dataframe to make a new column 
-	note it calls the contig in the dictonary to get the sequence """
-snp_data['seventyonemer'] = snp_data.apply(
-		lambda x: get_71mer(contig_dict[x['CHROM']], x['Pos'], [x['REF'],x['ALT']]), axis=1)
-
-
-"""next reorder and rename the columns to the affymetrix specs, then output the data"""
-
-snp_data['CHR'] = snp_data['CHROM']
-
-snp_data['SNP_VAL'] = '0'
-snp_data['CHR_TYPE'] = 'autosomal'
+	""" apply the 71mer build to the dataframe to make a new column 
+		note it calls the contig in the dictonary to get the sequence """
+	snp_data['seventyonemer'] = snp_data.apply(
+			lambda x: get_71mer(contig_dict[x['CHROM']], x['Pos'], [x['REF'],x['ALT']]), axis=1)
 
 
-""" list the columns needed in the affymetrix output file """
-final_cols = ['Organism','snpid','REF_STR','seventyonemer','CHR','Pos','SNP_PRIORITY','SNP_VAL','CHR_TYPE']
+	"""next reorder and rename the columns to the affymetrix specs, then output the data"""
 
-""" make a subset df, output to a tab delimited file """
-output_data = snp_data[final_cols]
+	snp_data['CHR'] = snp_data['CHROM']
 
-output_name =  args.vcf.split('.')[0] + ".tsv"
+	snp_data['SNP_VAL'] = '0'
+	snp_data['CHR_TYPE'] = 'autosomal'
 
-output_data.to_csv(output_name, sep='\t', index=False)
+
+	""" list the columns needed in the affymetrix output file """
+	final_cols = ['Organism','snpid','REF_STR','seventyonemer','CHR','Pos','SNP_PRIORITY','SNP_VAL','CHR_TYPE']
+
+	""" make a subset df, output to a tab delimited file """
+	output_data = snp_data[final_cols]
+
+	output_name =  args.vcf.split('.')[0] + ".tsv"
+
+	output_data.to_csv(output_name, sep='\t', index=False)
 
 
 
