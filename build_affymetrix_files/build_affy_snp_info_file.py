@@ -71,10 +71,12 @@ args = parser.parse_args()
 
 
 """ read in the genome fasta  """
-contig_dict = load_contigs('/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa') #change to args.contigs
+contig_dict = load_contigs(args.contigs) 
+#'/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa'
 
 """ read the .vcf in as a dataframe, then project get_71mer through a lambda """
-snp_data = read_vcf('fraser_strain_snps_one_location.vcf') #change to args.input_vcf
+snp_data = read_vcf(args.input_vcf) 
+#'fraser_strain_snps_one_location.vcf'
 
 """ change the name of the snps, store in affy column name"""
 snp_data['snpid'] = snp_data.apply(
@@ -82,7 +84,9 @@ snp_data['snpid'] = snp_data.apply(
 
 """ add this information to the dataframe:
 	1. snp_priority level 
-	2. strain of origin """
+	2. strain of origin 
+	3. organism name
+	4. make Pos an integer for use in 71mer """
 
 snp_data['SNP_PRIORITY'] = args.priority_level
 
