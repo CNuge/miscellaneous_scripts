@@ -76,11 +76,6 @@ contig_dict = load_contigs('/Users/Cam/Documents/University/microarray_developme
 """ read the .vcf in as a dataframe, then project get_71mer through a lambda """
 snp_data = read_vcf('fraser_strain_snps_one_location.vcf') #change to args.input_vcf
 
-""" apply the 71mer build to the dataframe to make a new column 
-	note it calls the contig in the dictonary to get the sequence """
-snp_data['seventyonemer'] = snp_data.apply(
-		lambda x: get_71mer(contig_dict[x['CHROM']], x['Pos'], [x['REF'],x['ALT']]), axis=1)
-
 """ change the name of the snps, store in affy column name"""
 snp_data['snpid'] = snp_data.apply(
 		lambda x: name_split(x['ID']), axis=1)
@@ -95,6 +90,14 @@ snp_data['REF_STR'] = args.strain
 
 snp_data['Organism'] = args.organism
 
+snp_data['Pos'] = snp_data['POS'].astype(int)
+
+""" apply the 71mer build to the dataframe to make a new column 
+	note it calls the contig in the dictonary to get the sequence """
+snp_data['seventyonemer'] = snp_data.apply(
+		lambda x: get_71mer(contig_dict[x['CHROM']], x['Pos'], [x['REF'],x['ALT']]), axis=1)
+
+
 """next reorder and rename the columns to the affymetrix specs, then output the data"""
 
 snp_data['CHR'] = snp_data['CHROM']
@@ -104,7 +107,7 @@ snp_data['CHR_TYPE'] = 'autosomal'
 
 
 """ list the columns needed in the affymetrix output file """
-final_cols = ['Organism','snpid','REF_STR','seventyonemer','CHR','POS','SNP_PRIORITY','SNP_VAL','CHR_TYPE']
+final_cols = ['Organism','snpid','REF_STR','seventyonemer','CHR','Pos','SNP_PRIORITY','SNP_VAL','CHR_TYPE']
 
 """ make a subset df, output to a tab delimited file """
 output_data = snp_data[final_cols]
