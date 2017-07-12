@@ -31,10 +31,10 @@ def get_71mer(contig, pos, alleles):
 def load_contigs(contig_fasta_file):
 	"""load the contigs into memory, in order to get surrounding bp """
 	contig_dict = {}
-	with open(contig_fasta_file) as file:
+	with open(contig_fasta_file, 'r+') as file:
 		for line in file:
 			name = line[1:].rstrip()
-			contig_dict[name] = file.next()
+			contig_dict[name] = next(file)
 	return contig_dict
 
 def read_vcf(filename):
@@ -71,7 +71,7 @@ args = parser.parse_args()
 
 
 """ read in the genome fasta  """
-contig_dict = load_contigs('salp_contig_file.fasta') #change to args.contigs
+contig_dict = load_contigs('/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa') #change to args.contigs
 
 """ read the .vcf in as a dataframe, then project get_71mer through a lambda """
 snp_data = read_vcf('fraser_strain_snps_one_location.vcf') #change to args.input_vcf
@@ -101,7 +101,6 @@ snp_data['CHR'] = snp_data['CHROM']
 
 snp_data['SNP_VAL'] = '0'
 snp_data['CHR_TYPE'] = 'autosomal'
-snp_data['seventyonemer']= 'placeholder'
 
 
 """ list the columns needed in the affymetrix output file """
