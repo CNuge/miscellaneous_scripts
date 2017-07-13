@@ -1,5 +1,4 @@
-
-""" note this is still a work in progress, ill update docs fully at the end """
+""
 
 these scripts are written to take the information from a .vcf file on the position of
 snps within a genome, and a genome fasta file and use these inputs to build the files
