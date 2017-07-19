@@ -52,8 +52,7 @@ if args.attachment != 'no_file':
 	attach_note = '\nThe desired output file,\' %s\' is attached.' % (args.attachment)
 	body = '\n\n' + body + attach_note
 	msg.attach(part)
-else:
-	pass	
+	
 	
 msg.attach(MIMEText(body, 'plain'))
 
