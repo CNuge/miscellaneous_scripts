@@ -4,7 +4,7 @@ from pandas import DataFrame
 
 """ this program will read through a series of contigs and a .vcf file
 	of a set of marker's positions on those contigs, and return a list
-	of 50,000 bp gaps with no markers identified """
+	of 500 bp gaps with no markers identified """
 
 
 def read_vcf_locations(vcf_name):
@@ -15,8 +15,10 @@ def read_vcf_locations(vcf_name):
 		for line in file:
 			if line[0] == '#':
 				continue
+			elif line[1] == "-":
+				continue
 			else:
-				data=line.split('\t')
+				data=line.rstrip().split('\t')
 				storage_location.append((data[0], data[1]))
 	return storage_location
 
@@ -55,17 +57,17 @@ def find_gaps(dictonary_of_snps, contig_dat):
 			print('missing:')
 			print(contig)
 			continue
-		if position_list[0] > 50000:
+		if position_list[0] > 500:
 			""" add front gaps to the list"""
 			gaps_list.append((contig, 0, position_list[0]))
-		if (position_list[-1] + 50000) < end_pos:
+		if (position_list[-1] + 500) < end_pos:
 			"""add trailing gaps to the list """
 			gaps_list.append((contig, position_list[-1], end_pos))
 		
 		pos_1 = 0
 		pos_2 = 1
 		while pos_2 < len(position_list):
-			if (position_list[pos_1] + 50000) > position_list[pos_2]:
+			if (position_list[pos_1] + 500) > position_list[pos_2]:
 				pass
 			else:
 				""" there is a 50000 or more bp gap here """
@@ -76,39 +78,33 @@ def find_gaps(dictonary_of_snps, contig_dat):
 
 
 
-
-
-
-
 if __name__ == '__main__':
 
 	#list all the .vcf in the directory
 
-	vcf_files = [x for x in os.listdir() if x[-3:] == 'vcf']
+	vcf_files = ['all_positions_unique_and_sorted.tsv']
 
 	#read them in, storing the contig and positions
 	snp_tuples = []
+	print('reading .vcf')
 	for file in vcf_files:
 		snps_in_vcf = read_vcf_locations(file)
 		snp_tuples.extend(snps_in_vcf)
 
 	#make a dataframe for comparison purposes
+	print('making dataframe')
 	snp_df = DataFrame(snp_tuples,columns=['Contig', 'Pos'])
-
+	print('reading contigs')
 	#read in the list of contigs.
 	contig_dat = contig_file_reader('contigs_ranked_by_size.txt')
 
 	#get the contigs that have no SNPs on them
+	print('find unreped contigs')
 	unreped_contigs = contig_dat[~contig_dat['Contig'].isin(snp_df['Contig'])]
-	#others that only has a '-' snp
-	additional_missing = ['Contig6224','Contig4388','Contig9123','Contig17467','Contig6267','Contig8925','Contig10049','Contig4275','Contig7477','Contig2467','Contig6076','Contig13321','Contig6043']
-	additional_missing_df = contig_dat[contig_dat['Contig'].isin(additional_missing)]
-	#merge the dataframes
-	unreped_contigs = unreped_contigs.append(additional_missing_df)
 
 	#print non represented contigs to a file
+	print('writing unreped contigs')
 	unreped_contigs.to_csv('contigs_with_no_snps.tsv', sep='\t', index=False)
-
 
 	#get contigs with representitives 
 	reped_contigs = contig_dat[contig_dat['Contig'].isin(snp_df['Contig'])]
@@ -118,6 +114,7 @@ if __name__ == '__main__':
 
 	#locate the gaps in the contigs
 	#there are 10,432 regions.
+	print('scanning for gaps')
 	gaps_in_contigs = find_gaps(contig_hit_dict, reped_contigs)
 
 	gaps_dataframe = DataFrame(gaps_in_contigs, columns = ['Contig', 'leading_position', 'trailing_position'])
