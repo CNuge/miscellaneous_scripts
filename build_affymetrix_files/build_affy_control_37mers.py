@@ -1,4 +1,3 @@
-import argparse 
 import pandas as pd
 from pandas import Series, DataFrame
 from random import randint
@@ -11,7 +10,7 @@ def get_37mer(contig, pos):
 	middle_of_37mer = "[%s]" % (contig[pos-1])
 	back_of_37mer = contig[pos:pos+6]
 	""" merge the 37mer to a single string """
-	out_dat = ''.join([front_of_71mer,middle_of_71mer,back_of_71mer])
+	out_dat = ''.join([front_of_37mer,middle_of_37mer,back_of_37mer])
 	return out_dat
 
 def load_contigs(contig_fasta_file):
@@ -33,8 +32,7 @@ if __name__ == '__main__':
 
 
 	""" read in the genome fasta  """
-	contig_dict = load_contigs(args.contigs) 
-	#'/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa'
+	contig_dict = load_contigs('../genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa') 
 
 
 	""" read in the locations of the gaps """
@@ -71,7 +69,7 @@ if __name__ == '__main__':
 		pos = randint(front_wall, back_wall)
 		contig = row[1]['Contig']	
 		""" build the 37mer string """
-		seq = get_37mer(contig_dict[contig], pos):
+		seq = get_37mer(contig_dict[contig], pos)
 		probe_id = contig + str(pos)
 		
 		""" build the output line """
