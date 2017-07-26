@@ -20,10 +20,20 @@ def get_71mer(contig, pos, alleles):
 		contig[pos+35]
 	except:
 		return '-' #if it is, return a blank 71mer so we know to exclude
+	
 	""" below slicing relies on the zero indexing of the contig string """
+
 	front_of_71mer = contig[pos-36:pos-1]
 	middle_of_71mer = allele_sort(alleles)
 	back_of_71mer = contig[pos:pos+35]
+	""" quick proof:
+		xx = '123456789'
+		pos = 5
+		front = xx[:pos-1]
+		middle = ='[A/T]'
+		back = xx[pos:]
+		new = ''.join(front,middle,back)
+		new == '1234[A/T]6789' """
 	""" merge the 71mer to a single string """
 	out_dat = ''.join([front_of_71mer,middle_of_71mer,back_of_71mer])
 	return out_dat

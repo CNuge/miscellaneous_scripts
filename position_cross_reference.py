@@ -1,6 +1,11 @@
 import pandas as pd
 from pandas import Series, DataFrame
 
+""" here I am using trimmed .vcf files to speed things gup. just the contig and pos
+	columns. these can be isolated from a .vcf using the code:
+	cat input.vcf | grep -v '##' | cut -f 1,2 > output_positions.txt """ 
+
+
 def read_pos_dat(position_file):
 	""" take the positions file and read in lines, adding info to a df """
 	list_of_dat =[]
@@ -21,8 +26,9 @@ def pos_dat_to_df(list_of_pos_dat, individual_name):
 def merge_dict_of_df(dict_of_dfs, col_to_merge_by):
 	""" take a dictonary of dataframes, merge them all to a single df based on
 		the query column """
-	left = dict_of_dfs[dict_of_dfs.keys[0]]
-	for i in dict_of_dfs.keys[1:]:
+	first = list(dict_of_dfs.keys())[0]
+	left = dict_of_dfs[first]
+	for i in list(dict_of_dfs.keys())[1:]:
 		right = dict_of_dfs[i]
 		result = pd.merge(left, right, on=col_to_merge_by)
 		left = result
@@ -50,9 +56,9 @@ if __name__ == '__main__':
 
 		df_dict[name] = pos_dat_to_df(input_dat, name)
 
-
+	df_dict.keys()
 	output_df = merge_dict_of_df(df_dict,'designation')
-
+	output_df.head()
 	output_df.to_csv('koop_merged_dataframe_snp_locations.tsv', sep='\t')
 
 
