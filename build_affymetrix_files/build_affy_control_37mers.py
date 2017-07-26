@@ -69,8 +69,11 @@ if __name__ == '__main__':
 		pos = randint(front_wall, back_wall)
 		contig = row[1]['Contig']	
 		""" build the 37mer string """
-		seq = get_37mer(contig_dict[contig], pos)
-		probe_id = contig + str(pos)
+		try:
+			seq = get_37mer(contig_dict[contig], pos)
+		except:
+			continue
+		probe_id = contig+ "_" + str(pos)
 		
 		""" build the output line """
 		row = '%s\t%s\t%s\t%s\n' % (probe_id, seq, contig, pos)
