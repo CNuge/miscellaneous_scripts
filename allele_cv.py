@@ -35,10 +35,10 @@ if __name__ == '__main__':
 	
 	""" read in the vcf from the other dataset """
 	
-	query_positions = read_pos_dat('all_snps_aligning_to_genome.vcf')
+	query_positions = read_pos_dat('compare_koop_allele_check.txt')
 
 	""" """
-	output_file = 'stacks_allele_compare.tsv'
+	output_file = 'all_danzfer_compare.tsv'
 
 	for contig in query_positions.keys():
 		try:
