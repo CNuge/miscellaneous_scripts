@@ -4,7 +4,8 @@ from pandas import DataFrame
 
 """ this program will read through a series of contigs and a .vcf file
 	of a set of marker's positions on those contigs, and return a list
-	of 500 bp gaps with no markers identified """
+	of 500 bp gaps with no markers identified - hard coded in find_gaps
+	generalize this function if needed"""
 
 
 def read_vcf_locations(vcf_name):
