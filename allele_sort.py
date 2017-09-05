@@ -7,8 +7,15 @@ def allele_sort(allele_list):
 	return allele_string
 
 
-
+x=[]
 with open('allele_in.txt') as file:
 	for line in file:
 		dat = line.rstrip().split('\t')
-		print(allele_sort(dat))
+		x.append(allele_sort(dat))
+
+
+with open('output.txt','a') as output:
+	for line in x:
+		output.write(line)
+		output.write('\n')
+	output.close()
