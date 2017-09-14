@@ -36,7 +36,7 @@ def get_71mer(contig, pos, alleles):
 		new == '1234[A/T]6789' """
 	""" merge the 71mer to a single string """
 	out_dat = ''.join([front_of_71mer,middle_of_71mer,back_of_71mer])
-	return out_dat
+	return out_dat.upper()
 
 def load_contigs(contig_fasta_file):
 	"""load the contigs into memory, in order to get surrounding bp """
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
 	""" read in the genome fasta  """
 	contig_dict = load_contigs(args.contigs) 
-	#'/Users/Cam/Documents/University/microarray_development/Arctic_charr_snp_information/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa'
+	#'/Users/Cam/Documents/AC_snp_information_final/genome_and_raw_vcfs/salp.genome.assembly_03.scaffolds.fa'
 
 	""" read the .vcf in as a dataframe, then project get_71mer through a lambda """
 	snp_data = read_vcf(args.input_vcf) 
@@ -126,7 +126,7 @@ if __name__ == '__main__':
 	""" make a subset df, output to a tab delimited file """
 	output_data = snp_data[final_cols]
 
-	output_name =  args.vcf.split('.')[0] + ".tsv"
+	output_name =  args.input_vcf.split('.')[0] + ".tsv"
 
 	output_data.to_csv(output_name, sep='\t', index=False)
 
