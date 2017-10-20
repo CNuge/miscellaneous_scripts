@@ -1,4 +1,4 @@
-
+import os
 import pandas as pd
 from pandas import Series, DataFrame
 import numpy as np
@@ -30,9 +30,9 @@ def homeologs_by_mb(df):
 	""" take a homeology dataframe, count the number of homeologs per megabase """
 	#break each chr's length up into 1mbp bins
 	#note this only goes to the homeolog hit pos, not the absloute end of the chr 
-	bin1 = [ x*100000 for x in range(int(df['pos1'].max()/1000000)+1)]
+	bin1 = [ x*1000000 for x in range(int(df['pos1'].max()/1000000)+1)]
 
-	bin2 = [ x*100000 for x in range(int(df['pos2'].max()/1000000)+1)]
+	bin2 = [ x*1000000 for x in range(int(df['pos2'].max()/1000000)+1)]
 
 	bin_counts1 = df.groupby(pd.cut(df['pos1'], bins=bin1)).size()
 
@@ -81,37 +81,56 @@ def synteny_blocks(chr_pos):
 	df = DataFrame(list_of_synteny_blocks, columns = ['block_start', 'block_len'] )
 	return df
 
-syn_dat = synteny_blocks(x)
 
 
 
-def hist_synteny_blocks(list_of_lengths):
-	plt.hist(list_of_lengths)
+def hist_synteny_blocks(list_of_lengths, filename):
+	plt.hist(list_of_lengths, color='blue')
+	plt.title('Length of syntenic gene order block lengths on chromosome pairing')
 	plt.xlabel('Length of Synteny Blocks')
 	plt.ylabel('Frequency')
-	plt.show()
+	plt.savefig(filename)
 
 
 if __name__ == '__main__':
 
-	#replace this with a loop for a the .csv in the dir
+	files = [x for x in os.listdir() if '.csv' in x]
 
-	filename = '1and2_homelogy.csv'
-	
-	#read in the data
-	data = read_homeology_file(filename)
-	# get data on the number of homeologs per bin
-	homeolog_bins = homeologs_by_mb(data)
+	for i in files:
 
-	#
-	gene_order_chr2 = homeolog_order_blocks(data)
+		#replace this with a loop for a the .csv in the dir
+		split_name = i.split('+')
+		
+		chr1 = split_name[0].split()[-1] #split on whitespace, keep last bit
+		chr2 = split_name[1].split('.')[0][1:] #split on the .csv, drop leading whitespace
 
-	chr1_v_chr2_order = synteny_blocks(gene_order_chr2)
+		filename = i
+		
+		#read in the data
+		data = read_homeology_file(filename)
+		# get data on the number of homeologs per bin
+		homeolog_bins = homeologs_by_mb(data)
 
-	length_lists = list(chr1_v_chr2_order['block_len'])
-	
+		homeolog_output_1 = chr1 + '_matches_to' + chr2 + 'distribution.csv'
 
-	hist_synteny_blocks(length_lists)
+		homeolog_bins[0].to_csv(homeolog_output_1)
+
+		homeolog_output_2 = chr2 + '_matches_to' + chr1 + 'distribution.csv'
+		homeolog_bins[1].to_csv(homeolog_output_2)
+
+		#
+		gene_order_chr2 = homeolog_order_blocks(data)
+
+		chr1_v_chr2_order = synteny_blocks(gene_order_chr2)
+
+		synteny_output = chr1 +'_'+ chr2 + '_syntenic_order_regions.csv'
+
+		chr1_v_chr2_order.to_csv(synteny_output, index=False)
+
+		length_lists = list(chr1_v_chr2_order['block_len'])		
+
+		graph_filename = chr1 +'_'+ chr2 +'_histogram.pdf'
+		hist_synteny_blocks(length_lists, graph_filename)
 
 
 
