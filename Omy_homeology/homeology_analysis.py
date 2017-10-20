@@ -2,7 +2,7 @@
 import pandas as pd
 from pandas import Series, DataFrame
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 """
@@ -46,21 +46,50 @@ def homeolog_order_blocks(df):
 	""" sorts and indexes based off of the first chr's bp positions, 
 		then sorts based on the second chr and returns the order of the
 		first chr's homeologs on the second """
-
-	data.sort_values(by=['pos1'], inplace = True)
-	
+	#sort by the positions on the first chr
+	data = df.sort_values(by=['pos1'])
+	#reindex base on the sorted df
 	data.reindex()
-
+	#sort by the positions on the second chromosomes
 	data.sort_values(by=['pos2'], inplace = True)
 
 	return list(data.index)
 
 
-# use homeolog_order_blocks to develop an 'index match score'
-# this should take the index of the second chr relative to the first and
-# give a score based on the number of adjacent #s that match, along
-# with the overall median continious number string length (average combo match length)
 
+def synteny_blocks(chr_pos):
+	""" pass in a list of the numeric positions of genes on chromosome one,
+		in their order on chromosome two. Assess the lengths of synteny blocks
+		and return a df with starting index, and the len of the synteny """
+	list_of_synteny_blocks = []
+	current_block = []
+	for pos in chr_pos:
+		if current_block == []:
+			current_block.append(pos)
+
+		elif ((current_block[-1] - 1) == pos) or ((current_block[-1] + 1) == pos):
+			current_block.append(pos)
+		else:
+			#end of previous synteny block, append its length and its starting position to 
+			#the list of synteny blocks and begin a new current block
+			end_of_s = (np.min(current_block), len(current_block))
+			list_of_synteny_blocks.append(end_of_s)
+			current_block = [pos]
+	#add on the last members
+	end_of_s = (np.min(current_block), len(current_block))
+	list_of_synteny_blocks.append(end_of_s)
+	df = DataFrame(list_of_synteny_blocks, columns = ['block_start', 'block_len'] )
+	return df
+
+syn_dat = synteny_blocks(x)
+
+
+
+def hist_synteny_blocks(list_of_lengths):
+	plt.hist(list_of_lengths)
+	plt.xlabel('Length of Synteny Blocks')
+	plt.ylabel('Frequency')
+	plt.show()
 
 
 if __name__ == '__main__':
@@ -69,13 +98,20 @@ if __name__ == '__main__':
 
 	filename = '1and2_homelogy.csv'
 	
+	#read in the data
 	data = read_homeology_file(filename)
-
+	# get data on the number of homeologs per bin
 	homeolog_bins = homeologs_by_mb(data)
 
-	homeolog_order_blocks(data)
+	#
+	gene_order_chr2 = homeolog_order_blocks(data)
 
+	chr1_v_chr2_order = synteny_blocks(gene_order_chr2)
 
+	length_lists = list(chr1_v_chr2_order['block_len'])
+	
+
+	hist_synteny_blocks(length_lists)
 
 
 
