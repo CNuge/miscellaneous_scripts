@@ -126,14 +126,14 @@ if __name__ == '__main__':
 
 	#read in SNP files
 
-	snp_input_file1 = '../SNP_information_files/unfiltered_lists/ALL_SNPs_allele_info_one_file.txt'
+	snp_input_file1 = '../SNP_information_files/ALL_SNPs.txt'
 	snp_input_dat= pd.read_table(snp_input_file1, sep='\t', index_col=None)
 
 # if multiple inputs, use this
-#	snp_input_file2 = './snp_files/Tassel_PSV_info.txt'
+#	snp_input_file2 = './snp_files/in1.txt'
 #	snp_dat2 = pd.read_table(snp_input_file2, sep='\t', index_col=None)
 
-#	snp_input_file3 = './snp_files/Tassel_SNP_info.txt'
+#	snp_input_file3 = './snp_files/in2.txt'
 #	snp_dat3 = pd.read_table(snp_input_file3, sep='\t', index_col=None)
 
 #	frames=[snp_dat1,snp_dat2,snp_dat3]
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 
 	polymorphism_vcf = output_to_vcf(all_polymorphism_data)
 
-	polymorphism_vcf.to_csv('stacks_two_locations.vcf', sep='\t',index=False)
+	polymorphism_vcf.to_csv('output_locations.vcf', sep='\t',index=False)
 
 
 
