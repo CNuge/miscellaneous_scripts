@@ -11,7 +11,7 @@ class ChangeCal():
 			raise ValueError(f'They have underpaid you by: ${cost-paid:.2f}')
 		elif self.__change_amount <= 0.2:
 			self.__change_amount = 0.0
-		print(f'${self.__change_amount:.2f}')
+		print(f'Change due: ${self.__change_amount:.2f}')
 	
 	@property
 	def change(self):
@@ -32,7 +32,7 @@ class ChangeCal():
 				denominations[i] = int(num_denom)
 				total_breakdown = total_breakdown - (num_denom * i)
 
-		outstring = ' '
+		outstring = 'Hand the customer:\n'
 		for k, v in denominations.items():
 			if v is not None:
 				if k >= 5:
