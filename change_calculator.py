@@ -8,7 +8,7 @@ class ChangeCal():
 		#play with the below error to make sure it flags underpayment
 		#but also lets rounding to the nearest nickle through
 		if self.__change_amount < -0.02:
-			raise ValueError(f'They have underpaid you by: ${cost-paid:.2f}')
+			raise ValueError(f'{cost-paid:.2f}')
 		elif self.__change_amount <= 0.2:
 			self.__change_amount = 0.0
 		print(f'${self.__change_amount:.2f}')
