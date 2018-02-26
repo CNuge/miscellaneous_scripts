@@ -32,7 +32,7 @@ class ChangeCal():
 				denominations[i] = int(num_denom)
 				total_breakdown = total_breakdown - (num_denom * i)
 
-		outstring = 'Hand the customer:\n'
+		outstring = ' '
 		for k, v in denominations.items():
 			if v is not None:
 				if k >= 5:
