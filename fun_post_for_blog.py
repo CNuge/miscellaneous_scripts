@@ -37,3 +37,9 @@ def merge_sorted(list_a, list_b):
 
 
 # do weird shit
+
+def merge_sorted(list_a, list_b):
+	# multiplying another list by zero is a valid way to get an empty a list
+	output_list = list_a * 0
+
+	
