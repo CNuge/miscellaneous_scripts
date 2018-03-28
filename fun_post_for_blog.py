@@ -18,7 +18,7 @@ def merge_sorted(list_a, list_b):
 	
 	output_list = []
 
-	while (len(list_a) > 0) and (len(list_b) >0):
+	while (len(list_a) > 0) and (len(list_b) > 0):
 		if list_a[0] == list_b[0]:
 			output_list.append(list_a.pop())
 			list_b.pop()
@@ -42,4 +42,21 @@ def merge_sorted(list_a, list_b):
 	# multiplying another list by zero is a valid way to get an empty a list
 	output_list = list_a * 0
 
+	# instead of using .pop, use a list comprehension to pull the back half of the list
 	
+	# instead of append do something gross like:
+	output_list = list_a * 1 + [5]
+
+	#can you think of a way to test equality without the > and < ?
+		# possibly : do math and check if it is > == or < 1
+		# could do a try: sqrt() to see if negative, 
+		# test if (6^x is 6) to see if == 0
+		# else, progress saying it is a positive number
+
+		# to check if the same:  y - x is x - y
+
+	# since we aren't using pop() we also need some weird sentinel values
+	# these sentinel values will also be needed for the final extend
+
+
+
