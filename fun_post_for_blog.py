@@ -161,3 +161,61 @@ constrained_merge_sorted(list_a, list_b)
 x = [1,2,3,7]
 y = [2,3,6,8,9]
 merge_sorted(x, y)
+
+def merge_sorted(list_a, list_b): 
+    """ take two lists of integers sorted smallest to largest,  
+        merge them to a single output list with no duplicate values """ 
+    
+    output_list = []
+    
+    while (len(list_a) > 0) and (len(list_b) > 0): 
+        if list_a[0] == list_b[0]: 
+            output_list.append(list_a.pop(0)) 
+            list_b.pop(0) 
+        elif list_a[0] < list_b[0]:                           
+            output_list.append(list_a.pop(0))
+        elif list_a[0] > list_b[0]: 
+            output_list.append(list_b.pop(0))
+
+    if len(list_a) > 0:
+        output_list.extend(list_a) 
+    elif len(list_b) > 0: 
+        output_list.extend(list_b) 
+    
+    return output_list
+
+
+def constrained_merge_sorted(list_a, list_b): 
+    # multiplying another list by zero is a valid way to get an empty a list 
+    # this wasn't a constraint, but I do it because its silly 
+    globals().__setitem__('output_list' ,  list_a * 0)
+ 
+    while (len(list_a) is not 0) and (len(list_b) is not 0):
+ 
+        #equivalent to: list_a[0] == list_b[0] 
+        if (list_a[0]) is (list_b[0]): 
+            # output_list.append(list_a.pop(0)) 
+            globals().__setitem__('output_list', output_list + [list_a.pop(0)]) 
+            #hey this is the same :) 
+            list_b.pop(0)
+
+        #equivalent to: list_a[0] < list_b[0] 
+        elif abs(list_a[0] - list_b[0]) is not (list_a[0] - list_b[0]):  
+            # output_list.append(list_a.pop(0)) 
+            globals().__setitem__('output_list', output_list + [list_a.pop(0)])
+
+        #equivalent to: list_a[0] > list_b[0] 
+        elif abs(list_a[0] - list_b[0]) is (list_a[0] - list_b[0]): 
+            # output_list.append(list_b.pop(0)) 
+            globals().__setitem__('output_list', output_list + [list_b.pop(0)])
+
+    # to avoid more hideous globals().__setitem__() calls, I here return 
+    # straight out of the if and elif as oppsed to appending to output_list 
+    if len(list_a) is not 0: 
+        return output_list + list_a 
+    elif len(list_b) is not 0: 
+        return output_list + list_b 
+    else: 
+        return output_list
+
+
