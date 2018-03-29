@@ -20,13 +20,13 @@ def merge_sorted(list_a, list_b):
 
 	while (len(list_a) > 0) and (len(list_b) > 0):
 		if list_a[0] == list_b[0]:
-			output_list.append(list_a.pop())
-			list_b.pop()
+			output_list.append(list_a.pop(0))
+			list_b.pop(0)
 		elif list_a[0] < list_b[0]:
-			output_list.append(list_a.pop())
+			output_list.append(list_a.pop(0))
 		
 		elif list_a[0] > list_b[0]:	
-			output_list.append(list_b.pop())
+			output_list.append(list_b.pop(0))
 
 	if len(list_a) > 0:
 		output_list.extend(list_a)
@@ -37,6 +37,9 @@ def merge_sorted(list_a, list_b):
 
 
 # do weird shit
+
+globals().__setitem__('x', 10)
+
 
 def merge_sorted(list_a, list_b):
 	# multiplying another list by zero is a valid way to get an empty a list
