@@ -36,10 +36,25 @@ def merge_sorted(list_a, list_b):
 	return output_list
 
 
-# do weird shit
-
+#weird stuff to stay in the constraints
 globals().__setitem__('x', 10)
+#instead of 
+x = 10
 
+len(list_a) is not 0
+#instead of 
+len(list_a) > 0
+
+list_a[0] is list_b[0]
+#instead of 
+list_a[0] == list_b[0]
+# that isn't that much worse, but generally is should not be used as a direct
+# equivalent to == it works here but that is by no means true in all context.
+# just remember:
+a = [1,2,3]
+b = [1,2,3]
+a == b
+a is b
 
 def merge_sorted(list_a, list_b):
 	# multiplying another list by zero is a valid way to get an empty a list
@@ -50,7 +65,7 @@ def merge_sorted(list_a, list_b):
 	while (len(list_a) is not 0) and (len(list_a) is not 0):
 
 		#equivalent to: list_a[0] == list_b[0]
-		if (list_a[0] - list_b[0]) is  (list_b[0] - list_a[0]):
+		if list_a[0] is list_b[0]:
 			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
 			list_b.pop(0)
 
