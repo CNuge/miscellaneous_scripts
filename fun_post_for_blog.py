@@ -38,6 +38,7 @@ def merge_sorted(list_a, list_b):
 
 
 #weird stuff to stay in the constraints
+
 globals().__setitem__('x', 10)
 #instead of 
 x = 10
@@ -91,25 +92,27 @@ abs(list_a[0] - list_b[0]) is (list_a[0] - list_b[0])
 
 
 
+		
 
 def constrained_merge_sorted(list_a, list_b):
-	globals().__setitem__('out_list' ,  list_a * 0)
+	globals().__setitem__('output_list' ,  list_a * 0)
 
 	while (len(list_a) is not 0) and (len(list_b) is not 0):
-		if list_a[0] is list_b[0]:
-			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
+
+		if (list_a[0]) is (list_b[0]):
+			globals().__setitem__('output_list', output_list + [list_a.pop(0)])
 			list_b.pop(0)
 
 		elif abs(list_a[0] - list_b[0]) is not (list_a[0] - list_b[0]):
-			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
+			globals().__setitem__('output_list', output_list + [list_a.pop(0)])
 
 		elif abs(list_a[0] - list_b[0]) is (list_a[0] - list_b[0]):
-			globals().__setitem__('out_list', out_list + [list_b.pop(0)])
+			globals().__setitem__('output_list', output_list + [list_b.pop(0)])
 
 	if len(list_a) is not 0:
 		return output_list + list_a
-	elif len(list_a) is not 0:
-		return out_list + list_b
+	elif len(list_b) is not 0:
+		return output_list + list_b
 	else:
 		return output_list
 
@@ -118,37 +121,43 @@ def constrained_merge_sorted(list_a, list_b):
 def constrained_merge_sorted(list_a, list_b):
 	# multiplying another list by zero is a valid way to get an empty a list
 	# this wasn't a constraint, but I do it because its silly
-	globals().__setitem__('out_list' ,  list_a * 0)
+	globals().__setitem__('output_list' ,  list_a * 0)
 
 	#while statement here
 	while (len(list_a) is not 0) and (len(list_b) is not 0):
 
 		#equivalent to: list_a[0] == list_b[0]
-		if list_a[0] is list_b[0]:
+		if (list_a[0]) is (list_b[0]):
 			# output_list.append(list_a.pop(0))
-			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
+			globals().__setitem__('output_list', output_list + [list_a.pop(0)])
 			#hey this is the same :)
 			list_b.pop(0)
 
 		#equivalent to: list_a[0] < list_b[0]
 		elif abs(list_a[0] - list_b[0]) is not (list_a[0] - list_b[0]):
  			# output_list.append(list_a.pop(0))
-			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
+			globals().__setitem__('output_list', output_list + [list_a.pop(0)])
 
 		#equivalent to: list_a[0] > list_b[0]
 		elif abs(list_a[0] - list_b[0]) is (list_a[0] - list_b[0]):
 			# output_list.append(list_b.pop(0))
-			globals().__setitem__('out_list', out_list + [list_b.pop(0)])
+			globals().__setitem__('output_list', output_list + [list_b.pop(0)])
 
 	# to avoid more hideous globals().__setitem__() calls, I here return
 	# straight out of the if and elif as oppsed to appending to output_list
 	if len(list_a) is not 0:
 		return output_list + list_a
-	elif len(list_a) is not 0:
-		return out_list + list_b
+	elif len(list_b) is not 0:
+		return output_list + list_b
 	else:
 		return output_list
 
-		
 
+list_a = [1,3,4,5]	
+list_b = [2,5,6,7,8]
 
+constrained_merge_sorted(list_a, list_b)
+
+x = [1,2,3,7]
+y = [2,3,6,8,9]
+merge_sorted(x, y)
