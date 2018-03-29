@@ -43,16 +43,35 @@ globals().__setitem__('x', 10)
 
 def merge_sorted(list_a, list_b):
 	# multiplying another list by zero is a valid way to get an empty a list
-	output_list = list_a * 0
+	# this wasn't a constraint, but I do it because its silly
+	globals().__setitem__('out_list' ,  list_a * 0)
+
+	#while statement here
+	while (len(list_a) is not 0) and (len(list_a) is not 0):
+
+		#equivalent to: list_a[0] == list_b[0]
+		if (list_a[0] - list_b[0]) is  (list_b[0] - list_a[0]):
+			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
+			list_b.pop(0)
+
+		#equivalent to: list_a[0] < list_b[0]
+		elif abs(list_b[0] - list_a[0]) is (list_b[0] - list_a[0]):
+			globals().__setitem__('out_list', out_list + [list_a.pop(0)])
+
+		#equivalent to: list_a[0] > list_b[0]
+		elif abs(list_a[0] - list_b[0]) is (list_a[0] - list_b[0]):
+			globals().__setitem__('out_list', out_list + [list_b.pop(0)])
+
+	# extend using the sentinels
 
 	# instead of using .pop, use a list comprehension to pull the back half of the list
 	
 	# instead of append do something gross like:
-	output_list = list_a * 1 + [5]
+	out_list = list_a * 1 + [5]
 
 	#can you think of a way to test equality without the > and < ?
 		# possibly : do math and check if it is > == or < 1
-		# could do a try: sqrt() to see if negative, 
+		# could do a try: abs(x) is x to see if negative, 
 		# test if (6^x is 6) to see if == 0
 		# else, progress saying it is a positive number
 
